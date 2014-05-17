@@ -5,13 +5,22 @@
 <script type="text/javascript" src="aadictview.js"></script>
 <link rel="stylesheet" href="aadictview.css" type="text/css">
 </head>
-<body onload="aadict_init('ArcheAgeJP20140424.txt', 'result');">
+<body onload="aadict_init('ArcheAgeJP20140424.txt', 'ArcheAgeMenu.txt', 'menu', 'result');">
+<div id="search">
 <form name="search_form" id="searchform">
 ArcheAge (JP) 製作辞典＋ <br />
 <input type="text" name="q" size="50">
 <input type="submit" value="検索" onclick="search(search_form.q.value, 'result'); return false;">
 </form>
+</div>
 <div id="result">
+</div>
+<div id="post">
+<div id="menu">
+</div>
+<div>
+<a href="ArcheAgeJP20140424.txt" target="_blank">製作辞典データ</a>
+</div>
 </div>
 </body>
 </html>

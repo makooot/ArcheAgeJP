@@ -127,7 +127,7 @@ function regexp_match(re)
 }
 function match_by_material(key)
 {
-	var re = RegExp("【材料】[^【]*▽"+key+"x");
+	var re = RegExp("(【材料】|【配置材料】|【建造材料】)[^【]*▽"+key+"x");
 	return regexp_match(re);
 }
 function match_by_item(key)

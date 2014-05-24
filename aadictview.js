@@ -150,6 +150,8 @@ function basic_format(result)
 		r = textToCDATA(r)
 		r = r.replace(/^[^【]+/, "<span class=\"clickable\" onclick=\"search_material('$&', 'result');\">$&</span>");
 		r = replace_clickable(r, "【材料】", "search_item");
+		r = replace_clickable(r, "【配置材料】", "search_item");
+		r = replace_clickable(r, "【建造材料】", "search_item");
 		r = replace_clickable(r, "獲得物】", "search_material");
 		r = replace_clickable(r, "収穫物】", "search_material");
 		r = r.replace(/【/g, "\n    【");
@@ -182,6 +184,8 @@ function list_format(result)
 		var item_name = RegExp.lastMatch;
 		r = RegExp.rightContext;
 		r = replace_clickable(r, "【材料】", "search_item");
+		r = replace_clickable(r, "【配置材料】", "search_item");
+		r = replace_clickable(r, "【建造材料】", "search_item");
 		r = replace_clickable(r, "獲得物】", "search_material");
 		r = replace_clickable(r, "収穫物】", "search_material");
 		r = r.replace(/【/g, "\n    【");

@@ -5,6 +5,8 @@
 // http://opensource.org/licenses/mit-license.php
 //
 
+invalidAttributeError = new Error(1, "invalid attribute");
+
 function validator(filename, result_id)
 {
 	var req = new XMLHttpRequest();
@@ -44,24 +46,53 @@ function isValid(data)
 	if(data.match(/^【/)) return false;
 	if(data.match(/^[^【]+】/)) return false;
 	if(data.match(/【】/)) return false;
+	if(data.match(/】【/)) return false;
 	if(data.match(/【[^】]+【/)) return false;
 	if(data.match(/(【|】|▽)$/)) return false;
-	var attributes = data.substr(data.indexOf("【")).split(/【[^】]*】/);
-	for(var i in attributes) {
-		var attribute = attributes[i];
-		if(attribute.match(/^▽/)) {
-			var values = attribute.substr(1).split(/▽/);
-			for(var j in values) {
-				var value = values[j];
-				if(value.match(/x/)) { 
-					if(!value.match(/[^x]+x([0-9]+|\?)(-[0-9]+|\?)?(\([^\)]+\))?(▽|$)/)) return false;
-				}
-			}
+
+	try {
+		data.substr(data.indexOf("【")).replace(/【[^】]+】[^【]+/g, checkAttribute);
+	} catch(e) {
+		if(e===invalidAttributeError) {
+			return false;
 		} else {
-			if(attribute.match(/▽/)) return false;
+			throw e;
 		}
 	}
 
+	return true;
+}
+
+function checkAttribute(attribute)
+{
+	if(!isValidAttribute(attribute)) {
+		throw invalidAttributeError;
+	}
+}
+
+function isValidAttribute(attribute)
+{
+	if(!attribute.match(/【([^】]+)】(.+)/)) return false;
+	var name = RegExp.$1;
+	var value_raw = RegExp.$2;
+	if(value_raw.match(/^[^▽]/)) {
+		if(value_raw.match(/▽/)) return false;
+	}
+	if(name=="材料") {
+		if(value_raw.match(/^▽/)) {
+			var values = value_raw.substr(1).split(/▽/);
+		} else {
+			values = [ value_raw ];
+		}
+		for(var j in values) {
+			if(!isValidNumberedItem(values[j])) return false;
+		}
+	}
+	return true;
+}
+function isValidNumberedItem(s)
+{
+	if(!s.match(/[^x]+x([0-9]+|\?)(-[0-9]+|\?)?(\([^\)]+\))?$/)) return false;
 	return true;
 }
 

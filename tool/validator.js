@@ -5,7 +5,7 @@
 // http://opensource.org/licenses/mit-license.php
 //
 
-invalidAttributeError = new Error(1, "invalid attribute");
+invalidAttributeError = new Error();
 
 function validator(filename, result_id)
 {
@@ -78,22 +78,43 @@ function isValidAttribute(attribute)
 	if(value_raw.match(/^[^▽]/)) {
 		if(value_raw.match(/▽/)) return false;
 	}
-	if(name=="材料") {
-		if(value_raw.match(/^▽/)) {
-			var values = value_raw.substr(1).split(/▽/);
-		} else {
-			values = [ value_raw ];
-		}
-		for(var j in values) {
-			if(!isValidNumberedItem(values[j])) return false;
-		}
+	switch(name) {
+	case "材料":
+		if(!are_valid_values(value_raw, is_valid_material)) return false;
+		break;
+	case "獲得物":
+	case "加工時獲得物":
+	case "伐採時獲得物":
+	case "採集時獲得物":
+		if(!are_valid_values(value_raw, is_valid_harvest)) return false;
+		break;
 	}
 	return true;
 }
-function isValidNumberedItem(s)
+function to_values_array(value_raw)
 {
-	if(!s.match(/[^x]+x([0-9]+|\?)(-[0-9]+|\?)?(\([^\)]+\))?$/)) return false;
+	if(value_raw.match(/^▽/)) {
+		return value_raw.substr(1).split(/▽/);
+	} else {
+		return [ value_raw ];
+	}
+}
+function are_valid_values(value_raw, checker)
+{
+	var values = to_values_array(value_raw);
+	for(var j in values) {
+		if(!checker(values[j])) return false;
+	}
 	return true;
+}
+
+function is_valid_harvest(s)
+{
+	return s=="?" || s.match(/[^x]+x([0-9]+|\?)(-([0-9]+|\?))?(\([^\)]+\))?$/);
+}
+function is_valid_material(s)
+{
+	return s.match(/[^x]+x([0-9]+|\?)$/);
 }
 
 function text2CDATA(s)

@@ -18,7 +18,7 @@ function read_dict_data(filename)
 	var req = new XMLHttpRequest();
 	req.open("GET", filename, true);
 	req.onload = function() {
-		dictdata = req.responseText.split(/\n/);
+		dictdata = req.responseText.split((/\r\n|\r|\n/));
 		dict_filename = filename;
 	}
 	req.send();
@@ -29,7 +29,7 @@ function read_menu(filename, menu_id, result_id)
 	var req = new XMLHttpRequest();
 	req.open("GET", filename, true);
 	req.onload = function() {
-		var response = req.responseText.split(/\n/);
+		var response = req.responseText.split((/\r\n|\r|\n/));
 		var menu = "";
 		menu = "<ul>";
 		var group_opened = false;

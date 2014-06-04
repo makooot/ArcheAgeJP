@@ -1,6 +1,13 @@
 ArcheAgeJP
 ==========
+ArcheAge (Japan) Helper
 
-LICENSE
--------
-This software is released under the MIT License, see LICENSE
+製作辞典＋
+----------
+
+http://makooot.github.io/aadict/viewer.html
+
+ライセンス
+----------
+MIT License
+

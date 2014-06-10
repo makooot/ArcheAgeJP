@@ -6,20 +6,21 @@
 //
 
 dictdata = "";
-dict_filename = "";
 function aadict_init(data_filename, menu_filename, menu_id, result_id)
 {
 	read_dict_data(data_filename);
 	read_menu(menu_filename, menu_id, result_id);
 }
 
-function read_dict_data(filename)
+function read_dict_data(filename, hook)
 {
 	var req = new XMLHttpRequest();
 	req.open("GET", filename, true);
 	req.onload = function() {
 		dictdata = req.responseText.split((/\r\n|\r|\n/));
-		dict_filename = filename;
+		if(hook) {
+			hook();
+		}
 	}
 	req.send();
 }

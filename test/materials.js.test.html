@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>material.js test</title>
+<script type="text/javascript" src="test.js"></script>
+<script type="text/javascript" src="../materials.js"></script>
+<script type="text/javascript" src="../aadictview.js"></script>
+<script type="text/javascript">
+function test_all()
+{
+EQ(
+	"get_query(): 1",
+	get_query("?q="+encodeURI("高速用車体"),"q"),
+	"高速用車体"
+);
+EQ(
+	"get_query(): 2",
+	get_query("?p=0123&q=abc&r=+-*/","q"),
+	"abc"
+);
+
+dictdata = [
+	"あああ【労働力】10【材料】▽いいいx10▽うううx1",
+	"いいい【労働力】5【材料】▽えええx3",
+	"くさび【価格】5銅",
+	"おおお【獲得数】2【労働力】5【材料】▽かかかx10▽くさびx1",
+];
+
+EQ(
+	"get_material_tree(): 見つからない",
+	get_material_tree("んんん", 1),
+	[]
+);
+EQ(
+	"get_material_tree(): 購入するアイテム",
+	get_material_tree("くさび", 1),
+	["くさび", 1, ["coin", 5], []]
+);
+EQ(
+	"get_material_tree(): 深さ1",
+	get_material_tree("いいい", 1),
+	["いいい", 1, ["stamina", 5], ["えええ", 3, [], []]]
+);
+EQ(
+	"get_material_tree(): 深さ2",
+	get_material_tree("あああ", 1),
+	["あああ", 1, ["stamina", 10], ["いいい", 10, ["stamina", 50], ["えええ", 30, [], []], "ううう", 1, [], []]]
+);
+
+EQ(
+	"get_material_tree(): 獲得数2のレシピ",
+	get_material_tree("おおお", 10),
+	["おおお", 10, ["stamina", 25], ["かかか", 50, [], [], "くさび", 5, ["coin", 25], []]]
+);
+
+EQ(
+	"format_material_tree:",
+	format_material_tree(["いいい", 1, ["stamina", 5], ["えええ", 3, [], []]]),
+	"<table><tr><th>アイテム名</th><th>数量</th><th>コスト</th></tr><tr><td>いいい</td><td>1</td><td>労 5</td></tr><tr><td>…えええ</td><td>3</td><td></td></tr></table>"
+);
+
+EQ(
+	"format_tree:",
+	format_tree(["いいい", 1, ["stamina", 5], ["えええ", 3, [], []]], 0),
+	["<tr><td>", "", "いいい", "</td><td>", 1, "</td><td>", "労 5", "</td></tr>", "<tr><td>", "…", "えええ", "</td><td>", 3, "</td><td>", "", "</td></tr>"]
+);
+
+EQ(
+	"repeat_string: 0 ",
+	repeat_string("…", 0),
+	""
+);
+
+EQ(
+	"repeat_string: 1 ",
+	repeat_string("…", 1),
+	"…"
+);
+
+EQ(
+	"repeat_string: 2 ",
+	repeat_string("…", 2),
+	"……"
+);
+
+EQ( 
+	"to_cost_string: 労働力",
+	to_cost_string(["stamina", 10]),
+	"労 10"
+);
+
+EQ( 
+	"to_cost_string: デルフィナードの星",
+	to_cost_string(["star", 250]),
+	"★250"
+);
+
+EQ( 
+	"to_cost_string: 名誉ポイント",
+	to_cost_string(["honor", 1000]),
+	"名誉P 1000"
+);
+
+EQ( 
+	"to_cost_string: 生活ポイント",
+	to_cost_string(["live", 3]),
+	"生活P 3"
+);
+
+EQ( 
+	"to_cost_string: 金貨",
+	to_cost_string(["coin", 30000]),
+	"3金"
+);
+
+EQ( 
+	"to_cost_string: 銀貨",
+	to_cost_string(["coin", 1500]),
+	"15銀"
+);
+
+EQ( 
+	"to_cost_string: 銅貨",
+	to_cost_string(["coin", 50]),
+	"50銅"
+);
+
+EQ( 
+	"to_cost_string: 金銀銅貨",
+	to_cost_string(["coin", 123456]),
+	"12金34銀56銅"
+);
+
+}
+</script>
+</head>
+<body onload="test_all();">
+<div id="log">
+</div>
+</body>
+</html>

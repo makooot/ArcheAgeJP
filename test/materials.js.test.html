@@ -3,11 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>material.js test</title>
+<link rel="stylesheet" href="test.css" type="text/css">
 <script type="text/javascript" src="test.js"></script>
 <script type="text/javascript" src="../materials.js"></script>
 <script type="text/javascript" src="../aadictview.js"></script>
 <script type="text/javascript">
-function test_all()
+function test_suite()
 {
 EQ(
 	"get_query(): 1",
@@ -135,8 +136,8 @@ EQ(
 }
 </script>
 </head>
-<body onload="test_all();">
-<div id="log">
-</div>
+<body onload="TEST_ALL(test_suite);">
+<div id="summary"></div>
+<div id="log"></div>
 </body>
 </html>

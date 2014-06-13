@@ -145,11 +145,13 @@ function match_by_hatvest(key)
 function basic_format(result)
 {
 	var s = "";
-	s += "<pre>"
+	s += "<div>"
 	for(var i in result) {
 		var r = result[i];
 		r = textToCDATA(r)
-		r = r.replace(/^[^【]+/, "<span class=\"clickable\" onclick=\"search_material('$&', 'result');\">$&</span>");
+		r = r.replace(/^[^【]+/, "<span class=\"clickable\" onclick=\"search_material('$&', 'result');\">$&</span>"+
+		" <span class=\"expander-triangle\" onclick=\"expdexp(this.nextSibling, this, ['▼', '▲']);\">▲</span>"+
+		"<pre style=\"display:block;\">");
 		r = replace_clickable(r, "【材料】", "search_item");
 		r = replace_clickable(r, "【配置材料】", "search_item");
 		r = replace_clickable(r, "【建造材料】", "search_item");
@@ -163,10 +165,11 @@ function basic_format(result)
 		r = replace_clickable(r, "収穫物】", "search_material");
 		r = r.replace(/【/g, "\n    【");
 		r = r.replace(/▽/g, "\n        ▽");
+		r = r+"</pre>";
 		r = r + "\n \n";
-		s += r;
+		s += "<div>" + r + "</div>";
 	}
-	s += "</pre>";
+	s += "</div>";
 	return s;
 }
 
@@ -203,8 +206,8 @@ function list_format(result)
 		r = r.replace(/▽/g, "\n        ▽");
 		r = r + "\n \n";
 		s += "<div>";
-		s += "<span class=\"expander\" onclick=\"expdexp(this.nextSibling.nextSibling, this);\">+</span>";
 		s += "<span class=\"clickable\" onclick=\"search_material('" + item_name + "', 'result');\">" + item_name + "</span>";
+		s += " <span class=\"expander-triangle\" onclick=\"expdexp(this.nextSibling, this, ['▼', '▲']);\">▼</span>";
 		s += "<pre style=\"display:none;\">";
 		s += r;
 		s += "</pre>";
@@ -280,14 +283,21 @@ function textToCDATA(s)
 	return s;
 }
 
-function expdexp(t, m)
+function expdexp(t, m, s)
 {
+	if(arguments.length>=3) {
+		var expander_string = s[0];
+		var dexpander_string = s[1];
+	} else {
+		var expander_string = "+";
+		var dexpander_string = "-";
+	}
 	if(t.style.display=="none") {
 		t.style.display = "";
-		m.innerHTML = "-";
+		m.innerHTML = dexpander_string;
 	} else {
 		t.style.display = "none";
-		m.innerHTML = "+";
+		m.innerHTML = expander_string;
 	}
 }
 

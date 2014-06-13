@@ -34,6 +34,12 @@
 	cursor: pointer;
 	margin: 0 5px 0 0;
 }
+.expander-triangle {
+	font-size: x-small;
+	cursor: pointer;
+	background-color: blue;
+	color: white;
+}
 .clickable {
 	color: blue;
 	text-decoration: underline;

@@ -161,8 +161,6 @@ function basic_format(result)
 		r = replace_clickable(r, "【採集時獲得物】", "search_material");
 		r = replace_clickable(r, "【獲得物】", "search_material");
 		r = replace_clickable(r, "【収穫物】", "search_material");
-		r = replace_clickable(r, "獲得物】", "search_material");
-		r = replace_clickable(r, "収穫物】", "search_material");
 		r = r.replace(/【/g, "\n    【");
 		r = r.replace(/▽/g, "\n        ▽");
 		r = r+"</pre>";

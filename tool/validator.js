@@ -49,7 +49,8 @@ function isValid(data)
 	if(data.match(/】【/)) return false;
 	if(data.match(/【[^】]+【/)) return false;
 	if(data.match(/(【|】|▽)$/)) return false;
-
+	if(data.match(/】[^【]*】/)) return false;
+	
 	try {
 		data.substr(data.indexOf("【")).replace(/【[^】]+】[^【]+/g, checkAttribute);
 	} catch(e) {

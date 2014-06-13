@@ -153,6 +153,12 @@ function basic_format(result)
 		r = replace_clickable(r, "【材料】", "search_item");
 		r = replace_clickable(r, "【配置材料】", "search_item");
 		r = replace_clickable(r, "【建造材料】", "search_item");
+		r = replace_clickable(r, "【収穫時獲得物】", "search_material");
+		r = replace_clickable(r, "【加工時獲得物】", "search_material");
+		r = replace_clickable(r, "【伐採時獲得物】", "search_material");
+		r = replace_clickable(r, "【採集時獲得物】", "search_material");
+		r = replace_clickable(r, "【獲得物】", "search_material");
+		r = replace_clickable(r, "【収穫物】", "search_material");
 		r = replace_clickable(r, "獲得物】", "search_material");
 		r = replace_clickable(r, "収穫物】", "search_material");
 		r = r.replace(/【/g, "\n    【");
@@ -187,8 +193,12 @@ function list_format(result)
 		r = replace_clickable(r, "【材料】", "search_item");
 		r = replace_clickable(r, "【配置材料】", "search_item");
 		r = replace_clickable(r, "【建造材料】", "search_item");
-		r = replace_clickable(r, "獲得物】", "search_material");
-		r = replace_clickable(r, "収穫物】", "search_material");
+		r = replace_clickable(r, "【収穫時獲得物】", "search_material");
+		r = replace_clickable(r, "【加工時獲得物】", "search_material");
+		r = replace_clickable(r, "【伐採時獲得物】", "search_material");
+		r = replace_clickable(r, "【採集時獲得物】", "search_material");
+		r = replace_clickable(r, "【獲得物】", "search_material");
+		r = replace_clickable(r, "【収穫物】", "search_material");
 		r = r.replace(/【/g, "\n    【");
 		r = r.replace(/▽/g, "\n        ▽");
 		r = r + "\n \n";
@@ -211,7 +221,7 @@ function replace_clickable(s, attr, search_func)
 	if(m.indexOf("▽")==-1) {
 		m = m.replace(/^(.*)x/, "】<span class=\"clickable\" onclick=\""+search_func+"l('$1', 'result');\">$1</span>x");
 	} else {
-		m = m.replace(/▽([^<x]+)x/g, "▽<span class=\"clickable\" onclick=\""+search_func+"('$1', 'result');\">$1</span>x");
+		m = m.replace(/▽([^x]+)x/g, "▽<span class=\"clickable\" onclick=\""+search_func+"('$1', 'result');\">$1</span>x");
 	}
 	s = s.replace(re, attr+m);
 	return s;

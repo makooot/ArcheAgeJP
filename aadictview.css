@@ -9,7 +9,7 @@
 #result {
 	position :absolute;
 	top: 100px;
-	left: 250px;
+	left: 310px;
 	bottom: auto;
 	right: auto;
 	width: auto
@@ -20,7 +20,7 @@
 	left: 5px;
 	bottom: auto;
 	right: 200px;
-	width: 240px;
+	width: 300px;
 }
 #searchform {
 	border-style : none none solid none;

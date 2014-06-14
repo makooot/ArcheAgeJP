@@ -55,18 +55,23 @@ EQ(
 	["おおお", 10, ["stamina", 25], ["かかか", 50, [], [], "くさび", 5, ["coin", 25], []]]
 );
 
-/*
 EQ(
 	"format_material_tree:",
-	format_material_tree(["いいい", 1, ["stamina", 5], ["えええ", 3, ["stamina", 1], ["おおお", 1, [], []], "かかか", 1, [], []]]]),
-	"<table><tr><th>アイテム名</th><th>数量</th><th>コスト</th></tr><tr><td>いいい</td><td>1</td><td>労 5</td></tr><tr><td>└えええ</td><td>3</td><td></td></tr><tr><td>│└おおお</td><td>1</td><td></td></tr><tr><td>└かかか</td><td>3</td><td></td></tr></table>"
+	format_material_tree([
+		"いいい", 1, ["stamina", 5], [
+			"えええ", 3, ["stamina", 1], [
+				"おおお", 1, [], []
+			],
+			"かかか", 1, [], []
+		]
+	]),
+	"<table><tr><th>アイテム名</th><th>数量</th><th>コスト</th></tr><tr><td>いいい</td><td>1</td><td>労 5</td></tr><tr><td>├えええ</td><td>3</td><td>労 1</td></tr><tr><td>│└おおお</td><td>1</td><td></td></tr><tr><td>└かかか</td><td>1</td><td></td></tr></table>"
 );
-*/
 
 EQ(
 	"format_tree: 1 item",
 	format_tree(["いいい", 1, ["stamina", 5], []], ""),
-	["<tr><td>", "", "", "いいい", "</td><td>", 1, "</td><td>", "労 5", "</td></tr>"]
+	["<tr><td>", "", "└", "いいい", "</td><td>", 1, "</td><td>", "労 5", "</td></tr>"]
 );
 
 EQ(
@@ -79,24 +84,6 @@ EQ(
 	"format_tree: 2 sub-items",
 	format_tree(["いいい", 1, ["stamina", 5], [], "ううう", 5, ["coin", 500], []], "│"),
 	["<tr><td>", "│", "├", "いいい", "</td><td>", 1, "</td><td>", "労 5", "</td></tr>", "<tr><td>", "│", "└", "ううう", "</td><td>", 5, "</td><td>", "5銀", "</td></tr>"]
-);
-
-EQ(
-	"repeat_string: 0 ",
-	repeat_string("…", 0),
-	""
-);
-
-EQ(
-	"repeat_string: 1 ",
-	repeat_string("…", 1),
-	"…"
-);
-
-EQ(
-	"repeat_string: 2 ",
-	repeat_string("…", 2),
-	"……"
 );
 
 EQ( 

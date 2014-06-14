@@ -111,7 +111,7 @@ function format_material_tree(tree)
 	lines = lines.concat([
 		"<table>",
 		"<tr><th>アイテム名</th><th>数量</th><th>コスト</th></tr>",
-		"<tr><td>" + name + "</td><td>" + number + "</td><td>" + cost + "</td></tr>"
+		"<tr><td>" + name + "</td><td>" + number + "</td><td>" + to_cost_string(cost) + "</td></tr>"
 	]);
 	lines = lines.concat(format_tree(sub_materials, ""));
 	
@@ -140,16 +140,6 @@ function format_tree(tree, super_branch)
 	}
 	
 	return　lines;
-}
-
-function repeat_string(str, times)
-{
-	var s = "";
-	while(times>0) {
-		s += str;
-		times--;
-	}
-	return s;
 }
 
 function to_cost_string(cost)

@@ -5,6 +5,9 @@ table {
 tr {
 	border: 1px black solid;
 }
-td, th {
+th {
 	border: 1px black solid;
+}
+td {
+	border: 1px gray solid;
 }

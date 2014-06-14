@@ -103,19 +103,24 @@ function get_material_tree(item, number)
 
 function format_material_tree(tree)
 {
+	var name = tree.shift();
+	var number = tree.shift();
+	var cost = tree.shift();
+	var sub_materials = tree.shift();
 	var lines = [];
 	lines = lines.concat([
 		"<table>",
-		"<tr><th>アイテム名</th><th>数量</th><th>コスト</th></tr>"
+		"<tr><th>アイテム名</th><th>数量</th><th>コスト</th></tr>",
+		"<tr><td>" + name + "</td><td>" + number + "</td><td>" + cost + "</td></tr>"
 	]);
-	lines = lines.concat(format_tree(tree, 0));
+	lines = lines.concat(format_tree(sub_materials, ""));
 	
 	lines.push(	"</table>");
 	
 	return lines.join("");
 }
 
-function format_tree(tree, level)
+function format_tree(tree, super_branch)
 {
 	var lines = [];
 	while(tree.length>0) {
@@ -125,11 +130,12 @@ function format_tree(tree, level)
 		var sub_materials = tree.shift();
 		lines = lines.concat([
 			"<tr><td>",
-			repeat_string("…", level),
+			super_branch,
+			tree.length==0 ? "└" : "├",
 			name, "</td><td>", number, "</td><td>", to_cost_string(cost), "</td></tr>"
 		]);
 		if(sub_materials.length>0) {
-			lines = lines.concat(format_tree(sub_materials, level+1));
+			lines = lines.concat(format_tree(sub_materials, super_branch+(tree.length==0 ? "　" : "│")));
 		}
 	}
 	

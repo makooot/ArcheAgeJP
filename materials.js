@@ -31,6 +31,9 @@ function get_query(query_string, key)
 
 function get_material_tree(item, number)
 {
+	if(in_exclude_list(item)) {
+		return [item, number, [], []];
+	}
 	var result = match_by_item(item);
 	if(result.length==0) {
 		return [];
@@ -99,6 +102,25 @@ function get_material_tree(item, number)
 	}
 	ary.push(material_array);
 	return ary;
+}
+
+Exclude_list = [
+	"サンアーキウムの粉",
+	"サンアーキウムの欠片",
+	"サンアーキウムの結晶",
+	"サンアーキウムの浄水",
+	"ムーンアーキウムの粉",
+	"ムーンアーキウムの欠片",
+	"ムーンアーキウムの結晶",
+	"ムーンアーキウムの浄水",
+	"スターアーキウムの粉",
+	"スターアーキウムの欠片",
+	"スターアーキウムの結晶",
+	"スターアーキウムの浄水"
+];
+function in_exclude_list(item)
+{
+	return Exclude_list.indexOf(item)!=-1;
 }
 
 function format_material_tree(tree)

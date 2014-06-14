@@ -1,4 +1,11 @@
-﻿function material_view(data_file_name, arg, id)
+﻿//
+// materials.js
+// Copyright (c) 2014 HASHIGAYA, Makoto
+// This software is released under the MIT License, see LICENSE
+// http://opensource.org/licenses/mit-license.php
+//
+
+function material_view(data_file_name, arg, id)
 {
 	var root_item_name = get_query(arg, "q");
 	var result_element = document.getElementById(id);

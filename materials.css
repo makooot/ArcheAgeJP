@@ -11,3 +11,6 @@ th {
 td {
 	border: 1px gray solid;
 }
+.number {
+	text-align: right;
+}

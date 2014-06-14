@@ -158,6 +158,14 @@ EQ(
 	"12金34銀56銅"
 );
 
+EQ (
+	"sum_up_material: ",
+	sum_up_material(["あああ", 1, ["stamina", 10], [
+						"いいい", 2, ["stamina", 5], ["ううう", 10, [], []],
+						"えええ", 2, ["stamina", 5], ["ううう", 10, [], []]
+					]], new Object()),
+	{"あああ" : [1, true], "いいい" : [2, true], "ううう" : [20, false], "えええ" : [2, true]}
+);
 }
 </script>
 </head>

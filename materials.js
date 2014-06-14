@@ -17,7 +17,9 @@ function material_view(data_file_name, arg, id)
 				if(material_tree.length==0) {
 					element.innerHTML = "「" + item_name + "」は見つかりませんでした";
 				} else {
-					element.innerHTML = "「" + item_name + "」の材料ツリー</br>" + format_material_tree(material_tree);
+					var table_format= format_material_table(material_tree);
+					var tree_format = format_material_tree(material_tree);
+					element.innerHTML = "「" + item_name + "」の材料ツリー</br>" + tree_format + table_format;
 				}
 			};
 		}) (root_item_name, result_element);
@@ -178,6 +180,58 @@ function format_tree(tree, super_branch)
 	}
 	
 	return　lines;
+}
+
+function format_material_table(tree)
+{
+	var material_table = sum_up_material(tree, new Object());
+	var lines = [];
+	lines.push(["<table><caption>材料別集計</caption><tr><th>アイテム名</th><th>数量</th></tr>"].join(""));
+	for(var name in material_table) {
+		var number = material_table[name][0];
+		var has_material = material_table[name][1];
+		if(!has_material) {
+			continue;
+		}
+		lines.push(format_material(name, number, has_material));
+	}
+	for(var name in material_table) {
+		var number = material_table[name][0];
+		var has_material = material_table[name][1];
+		if(has_material) {
+			continue;
+		}
+		lines.push(format_material(name, number, has_material));
+	}
+	lines.push("</table>");
+	return lines.join("");
+}
+function format_material(name, number, has_material)
+{
+	if(has_material) {
+		name = "[" + name + "]";
+	}
+	return ["<tr><td>", name, "</td><td class=\"number\">", number, "</td></tr>"].join("")
+}
+
+function sum_up_material(original_tree, sum)
+{
+	var tree = original_tree.concat([]);
+	while(tree.length>0) {
+		var name = tree.shift();
+		var number = tree.shift();
+		var cost = tree.shift();
+		var sub_tree = tree.shift();
+		if(!sum || !sum[name]) {
+			sum[name] = [ 0, false ];
+		}
+		sum[name][0] += number;
+		if(sub_tree.length > 0) {
+			sum[name][1] = true;
+			sum = sum_up_material(sub_tree, sum);
+		}
+	}
+	return sum;
 }
 
 function to_cost_string(cost)

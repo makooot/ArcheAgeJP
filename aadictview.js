@@ -128,7 +128,7 @@ function regexp_match(re)
 }
 function match_by_material(key)
 {
-	var re = RegExp("(【材料】|【配置材料】|【建造材料】)[^【]*▽"+key+"x");
+	var re = RegExp("(【材料】|【配置材料】|【建造材料】)[^【]*▽"+escape_regexp(key)+"x");
 	return regexp_match(re);
 }
 function match_by_item(key)
@@ -138,6 +138,7 @@ function match_by_item(key)
 }
 function match_by_hatvest(key)
 {
+	key = escape_regexp(key);
 	var re = RegExp("((獲得|収穫)物】"+key+"|(獲得|収穫)物】[^【]*▽"+key+")");
 	return regexp_match(re);
 }
@@ -216,7 +217,7 @@ function list_format(result)
 
 function replace_clickable(s, attr, search_func)
 {
-	var re = RegExp(attr+"([^【]*)");
+	var re = RegExp(escape_regexp(attr)+"([^【]*)");
 	s.match(re);
 	var m = RegExp.$1;
 	if(m.indexOf("▽")==-1) {

@@ -133,7 +133,7 @@ function match_by_material(key)
 }
 function match_by_item(key)
 {
-	var re = RegExp("^"+key+"【");
+	var re = RegExp("^"+escape_regexp(key)+"【");
 	return regexp_match(re);
 }
 function match_by_hatvest(key)

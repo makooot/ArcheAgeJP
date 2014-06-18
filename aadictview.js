@@ -65,7 +65,24 @@ function read_menu(filename, menu_id, result_id)
 
 function search(key, result_id)
 {
-	var result = simple_match(key)
+	var search_kind = "";
+	if(key.match(/^(item:|material:|harvest:)(.*)/)) {
+		search_kind = RegExp.$1;
+		key = RegExp.$2;
+	}
+	var match_function = simple_match;
+	switch(search_kind) {
+	case "item:":
+		match_function = match_by_item;
+		break;
+	case "material:":
+		match_function = match_by_material;
+		break;
+	case "harvest:":
+		match_function = match_by_hatvest;
+		break;
+	}
+	var result = match_function(key)
 	if(result.length==0) {
 		document.getElementById(result_id).innerHTML = "<div>「" + key + "」は見つかりませんでした</div>"
 		return;

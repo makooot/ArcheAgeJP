@@ -93,7 +93,7 @@ function search_item(key, result_id)
 	}
 	var result = match_by_item(key)
 	if(result.length==0) {
-		result =  match_by_hatvest(key)
+		result =  match_by_harvest(key)
 		if(result.length==0) {
 			document.getElementById(result_id).innerHTML = "<div>アイテム「" + key + "」は見つかりませんでした</div>"
 			return;
@@ -136,7 +136,7 @@ function match_by_item(key)
 	var re = RegExp("^"+escape_regexp(key)+"【");
 	return regexp_match(re);
 }
-function match_by_hatvest(key)
+function match_by_harvest(key)
 {
 	key = escape_regexp(key);
 	var re = RegExp("((獲得|収穫)物】"+key+"|(獲得|収穫)物】[^【]*▽"+key+")");

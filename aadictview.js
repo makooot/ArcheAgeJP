@@ -31,31 +31,35 @@ function read_menu(filename, menu_id, result_id)
 	req.open("GET", filename, true);
 	req.onload = function() {
 		var response = req.responseText.split((/\r\n|\r|\n/));
-		var menu = "";
-		menu = "<ul>";
-		var group_opened = false;
-		var group_name = "";
+		
+		var menu_tree = [];
 		for(var i in response) {
 			var s = response[i];
 			if(s=="") {
 				continue;
 			}
-			if(s.substr(0,1)=="\t") {
-				//menu item
-				s = s.substr(1);
-				menu += "<li class=\"clickable\" onclick=\"category_list('【分類】"+group_name+"/"+s+"', '"+result_id+"');\">"+s+"</li>";
+			if(s.substr(0, 1)=="\t") {
+				menu_tree[menu_tree.length-1].push(s.substr(1));
 			} else {
-				// group
-				if(group_opened) {
-					menu += "</ul></li>";
-				}
-				menu += "<li>";
-				menu += "<span class=\"expander\" onclick=\"expdexp(this.nextSibling.nextSibling, this);\">+</span>";
-				menu += "<span class=\"clickable\" onclick=\"category_list('【分類】"+s+"', '"+result_id+"');\">"+s+"</span>";
-				menu += "<ul style=\"display:none;\">";
-				group_name = s;
-				group_opened = true;
+				menu_tree.push(s, []);
 			}
+		}
+		
+		var menu = "<ul>";
+		while(menu_tree.length > 0) {
+			var group_name = menu_tree.shift();
+			var sub_items = menu_tree.shift();
+
+			menu += "<li>";
+			menu += "<span class=\"expander\" onclick=\"expdexp(this.nextSibling.nextSibling, this);\">+</span>";
+			menu += "<span class=\"clickable\" onclick=\"category_list('【分類】"+group_name+"', '"+result_id+"');\">"+group_name+"</span>";
+			menu += "<ul style=\"display:none;\">";
+
+			for(var i=0; i<sub_items.length-1; i++) {
+				menu += "<li class=\"clickable\" onclick=\"category_list('【分類】"+group_name+"/"+sub_items[i]+"', '"+result_id+"');\">"+sub_items[i]+"</li>";
+			}
+			
+			menu += "</ul></li>";
 		}
 		menu += "</ul>";
 		document.getElementById(menu_id).innerHTML = menu;

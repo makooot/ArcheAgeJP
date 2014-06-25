@@ -108,7 +108,7 @@ function search(raw_key, result_id)
 		document.getElementById(result_id).innerHTML = "<div>" + target_string + "は見つかりませんでした</div>"
 		return;
 	}
-	document.getElementById(result_id).innerHTML = "<div>" + target_string + "の検索結果</div>" + basic_format(result);
+	document.getElementById(result_id).innerHTML = "<div>" + target_string + "の検索結果</div>" + items_format(result, true);
 	record_hist(raw_key);
 }
 
@@ -174,47 +174,7 @@ function match_by_item_ex(key)
 
 }
 
-function basic_format(result)
-{
-	var s = "";
-	s += "<div>"
-	for(var i in result) {
-		var r = result[i];
-		r = textToCDATA(r)
-		r = r.replace(/^[^【]+/, "<span class=\"clickable\" onclick=\"search_material('$&', 'result');\">$&</span>"+
-		" <span class=\"expander-triangle\" onclick=\"expdexp(this.nextSibling, this, ['▼', '▲']);\">▲</span>"+
-		"<pre style=\"display:block;\">");
-		r = replace_clickable(r, "【材料】", "search_item");
-		r = replace_clickable(r, "【配置材料】", "search_item");
-		r = replace_clickable(r, "【建造材料】", "search_item");
-		r = replace_clickable(r, "【収穫時獲得物】", "search_material");
-		r = replace_clickable(r, "【加工時獲得物】", "search_material");
-		r = replace_clickable(r, "【伐採時獲得物】", "search_material");
-		r = replace_clickable(r, "【採集時獲得物】", "search_material");
-		r = replace_clickable(r, "【獲得物】", "search_material");
-		r = replace_clickable(r, "【収穫物】", "search_material");
-		r = r.replace(/【/g, "\n    【");
-		r = r.replace(/▽/g, "\n        ▽");
-		r = r+"</pre>";
-		r = r + "\n \n";
-		s += "<div>" + r + "</div>";
-	}
-	s += "</div>";
-	return s;
-}
-
-function escape_regexp(s)
-{
-	s = s.replace(/[\.\*\[\]\^\$\+\*\(\)\|\{\}\\]/g, "\\$&");
-	return s;
-}
-
-function category_list(key, result_id)
-{
-	var result = regexp_match(escape_regexp(key)+"(/|【|$)")
-	document.getElementById(result_id).innerHTML = "<div>" + key + "</div>" + list_format(result);
-}
-function list_format(result)
+function items_format(result, expand)
 {
 	var s = "";
 	for(var i in result) {
@@ -237,13 +197,30 @@ function list_format(result)
 		r = r + "\n \n";
 		s += "<div>";
 		s += "<span class=\"clickable\" onclick=\"search_material('" + item_name + "', 'result');\">" + item_name + "</span>";
-		s += " <span class=\"expander-triangle\" onclick=\"expdexp(this.nextSibling, this, ['▼', '▲']);\">▼</span>";
-		s += "<pre style=\"display:none;\">";
+		if(expand) {
+			s += " <span class=\"expander-triangle\" onclick=\"expdexp(this.nextSibling, this, ['▼', '▲']);\">▲</span>";
+			s += "<pre style=\"display:block;\">";
+		} else {
+			s += " <span class=\"expander-triangle\" onclick=\"expdexp(this.nextSibling, this, ['▼', '▲']);\">▼</span>";
+			s += "<pre style=\"display:none;\">";
+		}
 		s += r;
 		s += "</pre>";
 		s += "</div>";
 	}
 	return s;
+}
+
+function escape_regexp(s)
+{
+	s = s.replace(/[\.\*\[\]\^\$\+\*\(\)\|\{\}\\]/g, "\\$&");
+	return s;
+}
+
+function category_list(key, result_id)
+{
+	var result = regexp_match(escape_regexp(key)+"(/|【|$)")
+	document.getElementById(result_id).innerHTML = "<div>" + key + "</div>" + items_format(result, false);
 }
 
 function replace_clickable(s, attr, search_func)

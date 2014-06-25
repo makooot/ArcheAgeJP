@@ -60,7 +60,7 @@ function read_menu(filename, menu_id, result_id)
 			menu += "<span class=\"clickable\" onclick=\"category_list('【分類】"+group_name+"', '"+result_id+"');\">"+group_name+"</span>";
 			menu += "<ul style=\"display:none;\">";
 
-			for(var i=0; i<sub_items.length-1; i++) {
+			for(var i=0; i<sub_items.length; i++) {
 				menu += "<li class=\"clickable\" onclick=\"category_list('【分類】"+group_name+"/"+sub_items[i]+"', '"+result_id+"');\">"+sub_items[i]+"</li>";
 			}
 			

@@ -79,7 +79,7 @@ function search(raw_key, result_id)
 {
 	var search_kind;
 	var key;
-	if(raw_key.match(/^(item:|material:|harvest:)(.*)/)) {
+	if(raw_key.match(/^(tree:|item:|material:|harvest:)(.*)/)) {
 		search_kind = RegExp.$1;
 		key = RegExp.$2;
 	} else{
@@ -90,6 +90,10 @@ function search(raw_key, result_id)
 	var target_string;
 	var key_string = textToCDATA(key);
 	switch(search_kind) {
+	case "tree:":
+		material_tree(key, result_id);
+		record_hist(raw_key);
+		return;
 	case "item:":
 		match_function = match_by_item_ex;
 		target_string = "アイテム「" + key_string + "」";
@@ -208,7 +212,8 @@ function items_format(result, expand)
 		s += "<div>";
 		s += "<span class=\"clickable\" onclick=\"search_material('" + item_name + "', 'result');\">" + item_name + "</span> ";
 		s += "<input type=checkbox id=" + checkbox_id + " class=item_detail_checkbox" + checked + " />";
-		s += "<label for=" + checkbox_id + " class=\"item_detail_label expander-triangle\"></label>";
+		s += "<label for=" + checkbox_id + " class=\"item_detail_label expander-triangle\"></label> ";
+		s += "<span class=tree_view_button onclick=\"search('tree:" + item_name + "', 'result')\"></span>";
 		s += "<pre class=item_detail_body>";
 		s += r;
 		s += "</pre>";

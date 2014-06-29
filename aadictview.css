@@ -154,3 +154,14 @@ td, th {
 .item_detail_checkbox:checked ~ .item_detail_body {
 	display: block;
 }
+
+.tree_view_button:after {
+	content: "Ｔ";
+	font-size: smaller;
+	background-color: #060;
+	color: white;
+	cursor: pointer;
+	display: inline-block;
+	width: 15px;
+	text-align: center;
+}

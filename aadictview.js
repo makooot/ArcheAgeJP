@@ -210,10 +210,11 @@ function items_format(result, expand)
 		r = r.replace(/▽/g, "\n        ▽");
 		r = r + "\n \n";
 		s += "<div>";
-		s += "<span class=\"clickable\" onclick=\"search_material('" + item_name + "', 'result');\">" + item_name + "</span> ";
-		s += "<input type=checkbox id=" + checkbox_id + " class=item_detail_checkbox" + checked + " />";
+		s += item_name;
+		s += " <input type=checkbox id=" + checkbox_id + " class=item_detail_checkbox" + checked + " />";
 		s += "<label for=" + checkbox_id + " class=\"item_detail_label expander-triangle\"></label> ";
 		s += "<span class=tree_view_button onclick=\"search('tree:" + item_name + "', 'result')\"></span>";
+		s += " <span class=search_by_material onclick=\"search_material('" + item_name + "', 'result')\"></span>";
 		s += "<pre class=item_detail_body>";
 		s += r;
 		s += "</pre>";

@@ -165,3 +165,14 @@ td, th {
 	width: 15px;
 	text-align: center;
 }
+
+.search_by_material:after {
+	content: "Ｐ";
+	font-size: smaller;
+	background-color: #808;
+	color: white;
+	cursor: pointer;
+	display: inline-block;
+	width: 15px;
+	text-align: center;
+}

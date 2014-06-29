@@ -214,7 +214,7 @@ function items_format(result, expand)
 		s += " <input type=checkbox id=" + checkbox_id + " class=item_detail_checkbox" + checked + " />";
 		s += "<label for=" + checkbox_id + " class=\"item_detail_label expander-triangle\"></label> ";
 		s += "<span class=tree_view_button onclick=\"search('tree:" + item_name + "', 'result')\"></span>";
-		s += " <span class=search_by_material onclick=\"search_material('" + item_name + "', 'result')\"></span>";
+		s += " <span class=search_by_material_button onclick=\"search_material('" + item_name + "', 'result')\"></span>";
 		s += "<pre class=item_detail_body>";
 		s += r;
 		s += "</pre>";
@@ -384,10 +384,31 @@ function hist_to_html()
 	var histories = search_history.get();
 	for(var i=0; i<histories.length; i++) {
 		var search_key = histories[i];
-		var name = search_key;
+		if(search_key.match(/^(tree:|item:|material:|harvest:)(.*)/)) {
+			var search_kind = RegExp.$1;
+			var name = textToCDATA(RegExp.$2);
+			switch(search_kind) {
+			case "tree:":
+				var class_name = "tree_view_button";
+				break;
+			case "item:":
+				var class_name = "search_by_item_button";
+				break;
+			case "material:":
+				var class_name = "search_by_material_button";
+				break;
+			case "harvest:":
+				var class_name = "search_by_harvest_button";
+				break;
+			}
+			var name = "<span class=" + class_name + "></span> " + name;
+			
+		} else {
+			var name = textToCDATA(search_key);
+		}
 		s += "<li>" +
-			"<span class=\"clickable\" onclick=\"search('"+textToCDATA(search_key)+"','"+result_id+"');\">"+textToCDATA(name)+"</span> " +
-			"<span class=\"round-square\" onclick=\"delete_hist('"+textToCDATA(name)+"');\">×</span>" +
+			"<span class=\"clickable\" onclick=\"search('" + textToCDATA(search_key) + "','"+result_id+"');\"> " +name + "</span> " +
+			"<span class=\"round-square\" onclick=\"delete_hist('" + textToCDATA(search_key) + "');\">×</span>" +
 			"</li>";
 	}
 	s += "</ul>";

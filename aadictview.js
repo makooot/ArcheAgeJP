@@ -192,6 +192,7 @@ function items_format(result, expand)
 
 	for(var i in result) {
 		var r = result[i];
+		var has_material = r.match(/【材料】/);
 		var checkbox_id = "item_detail_checkbox_id_"+i;
 		r = textToCDATA(r)
 		r.match(/^[^【]+/);
@@ -213,7 +214,9 @@ function items_format(result, expand)
 		s += item_name;
 		s += " <input type=checkbox id=" + checkbox_id + " class=item_detail_checkbox" + checked + " />";
 		s += "<label for=" + checkbox_id + " class=\"item_detail_label expander-triangle\"></label> ";
-		s += "<span class=tree_view_button onclick=\"search('tree:" + item_name + "', 'result')\"></span>";
+		if(has_material) {
+			s += "<span class=tree_view_button onclick=\"search('tree:" + item_name + "', 'result')\"></span>";
+		}
 		s += " <span class=search_by_material_button onclick=\"search_material('" + item_name + "', 'result')\"></span>";
 		s += "<pre class=item_detail_body>";
 		s += r;

@@ -190,7 +190,7 @@ function format_tree(tree, super_branch)
 
 function format_material_table(tree)
 {
-	var material_table = sum_up_material(tree, new Object());
+	var material_table = sum_up_material(tree[3], new Object());
 	var lines = [];
 	lines.push(["<table><caption>材料別集計</caption><tr><th>アイテム名</th><th>数量</th></tr>"].join(""));
 	for(var name in material_table) {

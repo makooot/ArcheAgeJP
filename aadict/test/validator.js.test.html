@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>material.js test</title>
+<link rel="stylesheet" href="test.css" type="text/css">
+<script type="text/javascript" src="test.js"></script>
+<script type="text/javascript" src="../tool/validator.js"></script>
+<script type="text/javascript" src="../aadictview.js"></script>
+<script type="text/javascript">
+function test_suite()
+{
+EQ(
+	"is_valid_material(): 1",
+	is_valid_material("バラx20"),
+	true
+);
+EQ(
+	"is_valid_material(): 2",
+	is_valid_material("バラx?"),
+	false
+);
+EQ(
+	"is_valid_material(): 3",
+	is_valid_material("バラ"),
+	false
+);
+EQ(
+	"is_valid_material(): 4",
+	is_valid_material("バラx"),
+	false
+);
+EQ(
+	"is_valid_harvest(): 1",
+	is_valid_harvest("バラx2-4"),
+	true
+);
+EQ(
+	"is_valid_harvest(): 2",
+	is_valid_harvest("バラx?-?"),
+	true
+);
+EQ(
+	"is_valid_harvest(): 3",
+	is_valid_harvest("バラx1(まれに)"),
+	true
+);
+EQ(
+	"is_valid_harvest(): 4",
+	is_valid_harvest("バラ"),
+	false
+);
+EQ(
+	"is_valid_harvest(): 5",
+	is_valid_harvest("バラx"),
+	false
+);
+EQ(
+	"is_valid_harvest(): 6",
+	is_valid_harvest("バラ(まれに)"),
+	false
+);
+EQ(
+	"check_values(): 1",
+	check_values("バラx20", is_valid_material),
+	null
+);
+EQ(
+	"check_values(): 2",
+	check_values("▽バラx20▽クローバーx20", is_valid_material),
+	null
+);
+EQ(
+	"check_values(): 3",
+	check_values("バラ", is_valid_material),
+	new AAError("E", "バラに誤りがあります")
+);
+EQ(
+	"check_values(): 4",
+	check_values("▽バラx20▽クローバー", is_valid_material),
+	new AAError("E", "クローバーに誤りがあります")
+);
+EQ(
+	"check_attribute(): 1",
+	check_attribute("【収穫物】▽バラx2-4"),
+	null
+);
+EQ(
+	"check_attribute(): 2",
+	check_attribute("【収穫物】▽バラx2-4"),
+	null
+);
+EQ(
+	"check_attribute(): 3",
+	check_attribute("【収穫物】▽バラ"),
+	new AAError("E", "【収穫物】のバラに誤りがあります")
+);
+EQ(
+	"check(): 1",
+	check("【収穫物】▽バラ"),
+	new AAError("E", "アイテム名がありません")
+);
+EQ(
+	"check(): 2",
+	check("適応気候】温帯【収穫物】▽バラ"),
+	new AAError("E", "\"【\"に対応していない\"】\"があります")
+);
+EQ(
+	"check(): 3",
+	check("バラの種【適応気候】温帯収穫物】▽バラ"),
+	new AAError("E", "\"【\"に対応していない\"】\"があります")
+);
+EQ(
+	"check(): 4",
+	check("バラの種【適応気候】温帯【収穫物▽バラ"),
+	new AAError("E", "\"【\"に対応する\"】\"がありません")
+);
+}
+</script>
+</head>
+<body onload="TEST_ALL(test_suite);">
+<div id="summary"></div>
+<div id="log"></div>
+</body>
+</html>

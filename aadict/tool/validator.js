@@ -5,19 +5,15 @@
 // http://opensource.org/licenses/mit-license.php
 //
 
-invalidAttributeError = new Error();
-
 function validator(filename, result_id)
 {
-	var req = new XMLHttpRequest();
-	req.open("GET", filename, true);
-	req.onload = function() {
-		dict_data = req.responseText.split((/\r\n|\r|\n/));
-		dict_filename = filename;
-		var result = validate(dict_data, filename);
-		document.getElementById(result_id).innerHTML = "<pre>"+result.messages.join("\n")+"\nファイル:"+dict_filename+"\nエラー:"+result.error_number+"\n行数　: "+result.line_number+"</pre>";
-	}
-	req.send();
+	var hook = (function(filename, id) {
+		return function(){
+			var result = validate(dictdata, filename);
+			document.getElementById(result_id).innerHTML = "<pre>"+result.messages.join("\n")+"\nファイル:"+filename+"\nエラー:"+result.error_number+"\n行数　: "+result.line_number+"</pre>";
+		}
+	})(filename, result_id);
+	read_dict_data(filename, hook);
 }
 
 function validate(data, dict_filename)
@@ -33,64 +29,74 @@ function validate(data, dict_filename)
 		if(line=="") {
 			continue;
 		}
-		if(!isValid(line)) {
-			result.messages.push(text2CDATA(dict_filename)+"("+result.line_number+"):"+text2CDATA(line));
+		var err = check(line);
+		if(err) {
+			result.messages.push(text2CDATA(dict_filename)+"("+result.line_number+"):"+text2CDATA(err.description));
 			result.error_number++;
 		}
 		
 	}
 	return result;
 }
-function isValid(data)
+
+function AAError(level_, description_) 
 {
-	if(data.match(/^【/)) return false;
-	if(data.match(/^[^【]+】/)) return false;
-	if(data.match(/【】/)) return false;
-	if(data.match(/】【/)) return false;
-	if(data.match(/【[^】]+【/)) return false;
-	if(data.match(/(【|】|▽)$/)) return false;
-	if(data.match(/】[^【]*】/)) return false;
+	this.level = level_;
+	this.description = description_;
+}
+
+function check(data)
+{
+	if(data.match(/^【/)) return new AAError("E", "アイテム名がありません");
+	if(data.match(/^[^【]+】/)) return new AAError("E", "\"【\"に対応していない\"】\"があります");
+	if(data.match(/【[^】]+(【|$)/)) return new AAError("E", "\"【\"に対応する\"】\"がありません");
+	if(data.match(/】[^【]*】/)) return new AAError("E", "\"【\"に対応していない\"】\"があります");
 	
-	try {
-		data.substr(data.indexOf("【")).replace(/【[^】]+】[^【]+/g, checkAttribute);
-	} catch(e) {
-		if(e===invalidAttributeError) {
-			return false;
-		} else {
-			throw e;
+	var attributes = data.match(/【[^】]*】[^【]*/g);
+	for(var i=0; i<attributes.length; i++) {
+		var err = check_attribute(attributes[i]);
+		if(err) {
+			return err;
 		}
 	}
 
-	return true;
+	return null;
 }
 
-function checkAttribute(attribute)
+function check_attribute(attribute)
 {
-	if(!isValidAttribute(attribute)) {
-		throw invalidAttributeError;
-	}
-}
-
-function isValidAttribute(attribute)
-{
-	if(!attribute.match(/【([^】]+)】(.+)/)) return false;
+	attribute.match(/(【[^】]*】)(.*)/);
 	var name = RegExp.$1;
 	var value_raw = RegExp.$2;
+
+	if(name=="") return new AAError("E", "項目名がありません");
+	if(value_raw=="") return new AAError("E", name+"の内容がありません");
+
 	if(value_raw.match(/^[^▽]/)) {
-		if(value_raw.match(/▽/)) return false;
+		if(value_raw.match(/▽/)) return new AAError("E", name+"の内容で▽の使い方が誤っています");
 	}
 	switch(name) {
-	case "材料":
-		if(!are_valid_values(value_raw, is_valid_material)) return false;
+	case "【材料】":
+	case "【配置材料】":
+	case "【建造材料】":
+		var err = check_values(value_raw, is_valid_material)
+		if(err) {
+			return new AAError(err.level, name+"の"+err.description);
+		}
 		break;
-	case "獲得物":
-	case "加工時獲得物":
-	case "伐採時獲得物":
-	case "採集時獲得物":
-		if(!are_valid_values(value_raw, is_valid_harvest)) return false;
-		break;
+	case "【収穫物】":
+	case "【獲得物】":
+	case "【収穫時獲得物】":
+	case "【加工時獲得物】":
+	case "【伐採時獲得物】":
+	case "【採集時獲得物】":
+		var err = check_values(value_raw, is_valid_harvest);
+		if(err) {
+			return new AAError(err.level, name+"の"+err.description);
+		}
 	}
-	return true;
+
+	return null;
 }
 function to_values_array(value_raw)
 {
@@ -100,22 +106,24 @@ function to_values_array(value_raw)
 		return [ value_raw ];
 	}
 }
-function are_valid_values(value_raw, checker)
+function check_values(value_raw, checker)
 {
 	var values = to_values_array(value_raw);
 	for(var j in values) {
-		if(!checker(values[j])) return false;
+		if(!checker(values[j])) {
+			return new AAError("E", values[j]+"に誤りがあります");
+		}
 	}
-	return true;
+	return null;
 }
 
 function is_valid_harvest(s)
 {
-	return s=="?" || s.match(/[^x]+x([0-9]+|\?)(-([0-9]+|\?))?(\([^\)]+\))?$/);
+	return s=="?" || RegExp(/[^x]+x([0-9]+|\?)(-([0-9]+|\?))?(\([^\)]+\))?$/).test(s);
 }
 function is_valid_material(s)
 {
-	return s.match(/[^x]+x([0-9]+|\?)$/);
+	return RegExp(/[^x]+x([0-9]+)$/).test(s);
 }
 
 function text2CDATA(s)
